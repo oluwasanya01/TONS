@@ -21,330 +21,62 @@
 } = React;
 const LOGIN_CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html, body { height: 100%; }
-
-  .login-root {
-    min-height: 100vh;
-    background: #040608;
-    font-family: 'Space Grotesk', sans-serif;
-    color: #e6edf3;
-    display: flex;
-    overflow: hidden;
-    position: relative;
-  }
-
-  /* ── Animated background ── */
-  .login-bg {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  }
-  .login-bg-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(57,217,138,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(57,217,138,0.03) 1px, transparent 1px);
-    background-size: 48px 48px;
-    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
-  }
-  .login-bg-glow1 {
-    position: absolute; width: 600px; height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(57,217,138,0.08) 0%, transparent 70%);
-    top: -100px; left: -100px;
-    animation: drift1 18s ease-in-out infinite;
-  }
-  .login-bg-glow2 {
-    position: absolute; width: 500px; height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(88,166,255,0.06) 0%, transparent 70%);
-    bottom: -80px; right: -80px;
-    animation: drift2 22s ease-in-out infinite;
-  }
-  .login-bg-glow3 {
-    position: absolute; width: 300px; height: 300px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(188,140,255,0.05) 0%, transparent 70%);
-    top: 40%; left: 60%;
-    animation: drift3 15s ease-in-out infinite;
-  }
-  @keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(60px,40px)} }
-  @keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-40px,-60px)} }
-  @keyframes drift3 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(30px,-30px)} 66%{transform:translate(-20px,20px)} }
-
-  /* ── Left panel — brand ── */
-  .login-left {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 60px 64px;
-    position: relative; z-index: 1;
-    border-right: 1px solid rgba(255,255,255,0.05);
-  }
-  @media (max-width: 900px) { .login-left { display: none; } }
-
-  .login-brand-eyebrow {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px; letter-spacing: 4px;
-    text-transform: uppercase; color: #39d98a;
-    margin-bottom: 24px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .brand-dot {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: #39d98a;
-    box-shadow: 0 0 8px #39d98a;
-    animation: pulse 2.5s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
-
-  .login-brand-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(72px, 8vw, 120px);
-    line-height: 0.9;
-    letter-spacing: -3px;
-    color: #ffffff;
-    text-shadow: 0 0 80px rgba(57,217,138,0.2);
-    margin-bottom: 20px;
-  }
-  .login-brand-title span {
-    display: block;
-    background: linear-gradient(135deg, #39d98a 0%, #58a6ff 60%, #bc8cff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .login-brand-sub {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14px; font-weight: 600;
-    letter-spacing: 3px; text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 52px;
-  }
-
-  .login-features {
-    display: flex; flex-direction: column; gap: 18px;
-  }
-  .login-feature {
-    display: flex; align-items: flex-start; gap: 14px;
-  }
-  .feat-num {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px; font-weight: 700;
-    color: #39d98a; letter-spacing: 1px;
-    width: 20px; flex-shrink: 0; margin-top: 2px;
-  }
-  .feat-text { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; }
-  .feat-text strong { color: #ffffff; font-weight: 600; }
-
-  .login-left-footer {
-    margin-top: 64px;
-    font-family: 'Space Mono', monospace;
-    font-size: 9px; letter-spacing: 1.5px;
-    color: rgba(255,255,255,0.2);
-    text-transform: uppercase;
-  }
-
-  /* ── Right panel — form ── */
-  .login-right {
-    width: 480px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 60px 48px;
-    position: relative; z-index: 1;
-    background: rgba(8,12,16,0.6);
-  }
-  @media (max-width: 900px) {
-    .login-right { width: 100%; padding: 40px 24px; background: transparent; }
-  }
-
-  .login-form-header { margin-bottom: 36px; }
-  .login-form-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 28px;
-    color: #ffffff; margin-bottom: 8px;
-    letter-spacing: -0.5px;
-  }
-  .login-form-sub {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 13px; color: rgba(255,255,255,0.5);
-    line-height: 1.5;
-  }
-
-  /* ── Social login buttons ── */
-  .social-row {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-    margin-bottom: 24px;
-  }
-  .social-btn {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 11px 14px; border-radius: 10px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.8);
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 12px; font-weight: 600;
-    cursor: pointer; transition: all 0.2s;
-    text-decoration: none;
-  }
-  .social-btn:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.2);
-    color: #ffffff;
-  }
-  .social-icon { width: 16px; height: 16px; }
-
-  .divider {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 24px;
-  }
-  .divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
-  .divider-text {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px; letter-spacing: 2px;
-    text-transform: uppercase; color: rgba(255,255,255,0.3);
-  }
-
-  /* ── Form fields ── */
-  .login-field { margin-bottom: 16px; }
-  .login-label {
-    display: block;
-    font-family: 'Space Mono', monospace;
-    font-size: 9px; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase;
-    color: rgba(255,255,255,0.6);
-    margin-bottom: 7px;
-  }
-  .login-input-wrap { position: relative; }
-  .login-input {
-    width: 100%;
-    background: rgba(13,17,23,0.8);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    padding: 13px 16px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14px; color: #ffffff;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .login-input::placeholder { color: rgba(255,255,255,0.25); }
-  .login-input:focus {
-    border-color: rgba(57,217,138,0.5);
-    box-shadow: 0 0 0 3px rgba(57,217,138,0.08);
-  }
-  .login-input.error {
-    border-color: rgba(248,81,73,0.5);
-    box-shadow: 0 0 0 3px rgba(248,81,73,0.06);
-  }
-  .login-input-icon {
-    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-    color: rgba(255,255,255,0.3); cursor: pointer; font-size: 13px;
-    transition: color 0.2s; user-select: none;
-  }
-  .login-input-icon:hover { color: rgba(255,255,255,0.7); }
-
-  .login-field-row {
-    display: flex; align-items: center;
-    justify-content: space-between; margin-bottom: 7px;
-  }
-  .forgot-link {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px; letter-spacing: 1px;
-    color: #39d98a; text-decoration: none;
-    transition: opacity 0.2s;
-  }
-  .forgot-link:hover { opacity: 0.7; }
-
-  /* ── Error / success messages ── */
-  .login-error {
-    background: rgba(248,81,73,0.08);
-    border: 1px solid rgba(248,81,73,0.2);
-    border-radius: 8px; padding: 10px 14px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px; color: #f85149;
-    letter-spacing: 0.5px; margin-bottom: 16px;
-  }
-  .login-success {
-    background: rgba(57,217,138,0.08);
-    border: 1px solid rgba(57,217,138,0.2);
-    border-radius: 8px; padding: 10px 14px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px; color: #39d98a;
-    letter-spacing: 0.5px; margin-bottom: 16px;
-  }
-
-  /* ── Submit button ── */
-  .login-submit {
-    width: 100%; padding: 14px;
-    border-radius: 12px; border: none;
-    background: linear-gradient(135deg, #39d98a 0%, #2bc074 100%);
-    color: #040608;
-    font-family: 'Space Mono', monospace;
-    font-size: 12px; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase;
-    cursor: pointer; margin-top: 8px;
-    transition: all 0.2s;
+  .lp-root {
+    min-height: 100vh; background: #040608;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', sans-serif; color: #ffffff;
     position: relative; overflow: hidden;
   }
-  .login-submit:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 28px rgba(57,217,138,0.35);
+  .lp-grid {
+    position: fixed; inset: 0; pointer-events: none;
+    background-image: linear-gradient(rgba(57,217,138,0.03) 1px,transparent 1px), linear-gradient(90deg,rgba(57,217,138,0.03) 1px,transparent 1px);
+    background-size: 48px 48px;
   }
-  .login-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-  .login-submit.loading::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    animation: shimmer 1.2s infinite;
+  .lp-glow {
+    position: fixed; pointer-events: none; width: 700px; height: 700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(57,217,138,0.06) 0%, transparent 65%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
   }
-  @keyframes shimmer { from{transform:translateX(-100%)} to{transform:translateX(100%)} }
-
-  /* ── Switch mode link ── */
-  .login-switch {
-    text-align: center; margin-top: 20px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 12px; color: rgba(255,255,255,0.4);
+  .lp-card {
+    position: relative; z-index: 1; width: 100%; max-width: 420px;
+    background: rgba(13,17,23,0.92); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px; padding: 40px 36px; margin: 20px;
   }
-  .login-switch button {
-    background: none; border: none; cursor: pointer;
-    color: #39d98a; font-family: 'Space Grotesk', sans-serif;
-    font-size: 12px; font-weight: 600;
-    margin-left: 4px; text-decoration: underline;
-    transition: opacity 0.2s;
-  }
-  .login-switch button:hover { opacity: 0.7; }
-
-  /* ── Terms ── */
-  .login-terms {
-    text-align: center; margin-top: 16px;
-    font-family: 'Space Mono', monospace;
-    font-size: 8px; letter-spacing: 0.5px;
-    color: rgba(255,255,255,0.2); line-height: 1.7;
-  }
-
-  /* ── Password strength ── */
-  .pw-strength { margin-top: 6px; display: flex; gap: 4px; align-items: center; }
+  .lp-logo { text-align: center; margin-bottom: 28px; }
+  .lp-logo-name { font-family: 'Syne',sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -1px; color: #ffffff; line-height: 1; }
+  .lp-logo-dot { background: linear-gradient(135deg,#39d98a,#58a6ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .lp-logo-sub { font-family: 'Space Mono',monospace; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 6px; }
+  .lp-tabs { display: grid; grid-template-columns: 1fr 1fr; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 4px; margin-bottom: 28px; }
+  .lp-tab { padding: 9px; border-radius: 8px; border: none; background: none; cursor: pointer; font-family: 'Space Mono',monospace; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); transition: all 0.2s; }
+  .lp-tab.active { background: rgba(57,217,138,0.12); color: #39d98a; border: 1px solid rgba(57,217,138,0.25); }
+  .lp-field { margin-bottom: 16px; }
+  .lp-label { display: block; font-family: 'Space Mono',monospace; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 7px; }
+  .lp-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 13px 16px; font-family: 'Space Grotesk',sans-serif; font-size: 14px; color: #ffffff; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+  .lp-input::placeholder { color: rgba(255,255,255,0.2); }
+  .lp-input:focus { border-color: rgba(57,217,138,0.5); box-shadow: 0 0 0 3px rgba(57,217,138,0.07); }
+  .lp-input-pw { padding-right: 44px; }
+  .lp-input-wrap { position: relative; margin-top: 7px; }
+  .lp-eye { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 14px; color: rgba(255,255,255,0.3); transition: color 0.2s; padding: 0; }
+  .lp-eye:hover { color: rgba(255,255,255,0.7); }
+  .lp-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+  .lp-forgot { background: none; border: none; cursor: pointer; font-family: 'Space Mono',monospace; font-size: 9px; letter-spacing: 1px; color: #39d98a; text-decoration: underline; transition: opacity 0.2s; }
+  .lp-forgot:hover { opacity: 0.7; }
+  .pw-bars { display: flex; gap: 4px; margin-top: 7px; align-items: center; }
   .pw-bar { flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.08); transition: background 0.3s; }
-  .pw-bar.active-weak   { background: #f85149; }
-  .pw-bar.active-fair   { background: #e3b341; }
-  .pw-bar.active-strong { background: #39d98a; }
-  .pw-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 8px; letter-spacing: 1px; width: 40px; text-align: right;
-    transition: color 0.3s;
-  }
-
-  /* ── Slide animation between login/signup ── */
-  .form-animate {
-    animation: formIn 0.3s ease;
-  }
-  @keyframes formIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .pw-bar.weak { background: #f85149; } .pw-bar.fair { background: #e3b341; } .pw-bar.strong { background: #39d98a; }
+  .pw-lbl { font-family: 'Space Mono',monospace; font-size: 8px; width: 38px; text-align: right; transition: color 0.3s; }
+  .lp-error { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.2); border-radius: 8px; padding: 10px 14px; font-family: 'Space Mono',monospace; font-size: 10px; color: #f85149; letter-spacing: 0.5px; margin-bottom: 16px; }
+  .lp-success { background: rgba(57,217,138,0.08); border: 1px solid rgba(57,217,138,0.2); border-radius: 8px; padding: 10px 14px; font-family: 'Space Mono',monospace; font-size: 10px; color: #39d98a; letter-spacing: 0.5px; margin-bottom: 16px; }
+  .lp-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(135deg,#39d98a,#2bc074); color: #040608; font-family: 'Space Mono',monospace; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; margin-top: 6px; transition: all 0.2s; position: relative; overflow: hidden; }
+  .lp-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(57,217,138,0.3); }
+  .lp-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .lp-btn.loading::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent); animation:shimmer 1.2s infinite; }
+  @keyframes shimmer { from{transform:translateX(-100%)} to{transform:translateX(100%)} }
+  .lp-footer { text-align: center; margin-top: 24px; font-family: 'Space Mono',monospace; font-size: 8px; letter-spacing: 1px; color: rgba(255,255,255,0.18); line-height: 1.9; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .lp-form-in { animation: fadeUp 0.25s ease; }
 `;
 const pwStrength = pw => {
   if (!pw) return 0;
@@ -353,32 +85,15 @@ const pwStrength = pw => {
   if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) s++;
   if (/[0-9]/.test(pw)) s++;
   if (/[^A-Za-z0-9]/.test(pw)) s++;
-  return s; // 0-4
-};
-const pwLabel = s => {
-  if (s <= 1) return {
-    label: "Weak",
-    cls: "active-weak",
-    color: "#f85149"
-  };
-  if (s <= 2) return {
-    label: "Fair",
-    cls: "active-fair",
-    color: "#e3b341"
-  };
-  return {
-    label: "Strong",
-    cls: "active-strong",
-    color: "#39d98a"
-  };
+  return s;
 };
 function Login({
   onLogin
 }) {
-  const [mode, setMode] = useState("login"); // login | signup | forgot
+  const [tab, setTab] = useState("signin");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -388,169 +103,86 @@ function Login({
   useEffect(() => {
     setError("");
     setSuccess("");
+    setName("");
     setEmail("");
     setPassword("");
-    setName("");
     setFormKey(k => k + 1);
-    setTimeout(() => emailRef.current?.focus(), 50);
-  }, [mode]);
+    setTimeout(() => emailRef.current && emailRef.current.focus(), 60);
+  }, [tab]);
   const strength = pwStrength(password);
-  const {
-    label: sLabel,
-    cls: sCls,
-    color: sColor
-  } = pwLabel(strength);
+  const pwCls = strength <= 1 ? "weak" : strength <= 2 ? "fair" : "strong";
+  const pwLbl = strength <= 1 ? "Weak" : strength <= 2 ? "Fair" : "Strong";
+  const pwCol = strength <= 1 ? "#f85149" : strength <= 2 ? "#e3b341" : "#39d98a";
   const handleSubmit = async e => {
     e.preventDefault();
     setError("");
     setSuccess("");
-
-    // Basic validation
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("Please enter a valid email address.");
+      setError("Enter a valid email address.");
       return;
     }
-    if (mode !== "forgot" && password.length < 6) {
+    if (tab === "forgot") {
+      setLoading(true);
+      await new Promise(r => setTimeout(r, 1200));
+      setLoading(false);
+      setSuccess("Reset link sent to " + email);
+      return;
+    }
+    if (password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
     }
-    if (mode === "signup" && name.trim().length < 2) {
-      setError("Please enter your full name.");
+    if (tab === "signup" && name.trim().length < 2) {
+      setError("Enter your full name.");
       return;
     }
     setLoading(true);
-    // Simulate API call — replace with your real auth endpoint
-    await new Promise(r => setTimeout(r, 1400));
-    if (mode === "forgot") {
-      setLoading(false);
-      setSuccess(`Reset link sent to ${email}. Check your inbox.`);
-      return;
-    }
+    await new Promise(r => setTimeout(r, 1300));
     setLoading(false);
-    // On success — call parent handler to switch to main app
     onLogin({
-      email,
+      email: email,
       name: name || email.split("@")[0]
     });
   };
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("style", null, LOGIN_CSS), /*#__PURE__*/React.createElement("div", {
-    className: "login-root"
+    className: "lp-root"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "login-bg"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "login-bg-grid"
+    className: "lp-grid"
   }), /*#__PURE__*/React.createElement("div", {
-    className: "login-bg-glow1"
+    className: "lp-glow"
   }), /*#__PURE__*/React.createElement("div", {
-    className: "login-bg-glow2"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "login-bg-glow3"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "login-left"
+    className: "lp-card"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "login-brand-eyebrow"
+    className: "lp-logo"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "brand-dot"
-  }), "Amparo Engineering Limited"), /*#__PURE__*/React.createElement("div", {
-    className: "login-brand-title"
-  }, "TONS", /*#__PURE__*/React.createElement("span", null, ".")), /*#__PURE__*/React.createElement("div", {
-    className: "login-brand-sub"
-  }, "Email Intelligence Bot"), /*#__PURE__*/React.createElement("div", {
-    className: "login-features"
-  }, [["01", "Live DNS Verification", "MX · DMARC · TLD risk scoring across dual resolvers"], ["02", "300+ Disposable Domains", "Instantly flags throwaway and spam email addresses"], ["03", "DMARC Intelligence", "Strict, moderate, and monitor policy detection"], ["04", "Bulk Parallel Engine", "4× concurrent processing — verify thousands in seconds"], ["05", "Catch-All Detection", "High and medium confidence wildcard analysis"]].map(([num, title, desc]) => /*#__PURE__*/React.createElement("div", {
-    key: num,
-    className: "login-feature"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "feat-num"
-  }, num), /*#__PURE__*/React.createElement("div", {
-    className: "feat-text"
-  }, /*#__PURE__*/React.createElement("strong", null, title), " \u2014 ", desc)))), /*#__PURE__*/React.createElement("div", {
-    className: "login-left-footer"
-  }, "\xA9 ", new Date().getFullYear(), " Amparo Engineering Limited \xB7 All rights reserved")), /*#__PURE__*/React.createElement("div", {
-    className: "login-right"
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "none",
-      textAlign: "center",
-      marginBottom: 32
-    },
-    className: "mobile-brand"
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: "'Syne',sans-serif",
-      fontWeight: 800,
-      fontSize: 40,
-      color: "#fff",
-      letterSpacing: "-1px"
-    }
-  }, "TONS"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: "'Space Mono',monospace",
-      fontSize: 9,
-      letterSpacing: "3px",
-      color: "#39d98a",
-      textTransform: "uppercase",
-      marginTop: 4
-    }
-  }, "Amparo Engineering")), /*#__PURE__*/React.createElement("div", {
-    className: "login-form-header"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "login-form-title"
-  }, mode === "login" ? "Welcome back" : mode === "signup" ? "Create account" : "Reset password"), /*#__PURE__*/React.createElement("div", {
-    className: "login-form-sub"
-  }, mode === "login" ? "Sign in to access your TONS dashboard" : mode === "signup" ? "Join to start verifying email intelligence" : "Enter your email and we'll send a reset link")), mode !== "forgot" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "social-row"
+    className: "lp-logo-name"
+  }, "TONS", /*#__PURE__*/React.createElement("span", {
+    className: "lp-logo-dot"
+  }, ".")), /*#__PURE__*/React.createElement("div", {
+    className: "lp-logo-sub"
+  }, "Amparo Engineering Limited")), tab !== "forgot" && /*#__PURE__*/React.createElement("div", {
+    className: "lp-tabs"
   }, /*#__PURE__*/React.createElement("button", {
-    className: "social-btn",
-    onClick: () => setError("Social login coming soon.")
-  }, /*#__PURE__*/React.createElement("svg", {
-    className: "social-icon",
-    viewBox: "0 0 24 24",
-    fill: "none"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z",
-    fill: "#4285F4"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z",
-    fill: "#34A853"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z",
-    fill: "#FBBC05"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z",
-    fill: "#EA4335"
-  })), "Google"), /*#__PURE__*/React.createElement("button", {
-    className: "social-btn",
-    onClick: () => setError("Social login coming soon.")
-  }, /*#__PURE__*/React.createElement("svg", {
-    className: "social-icon",
-    viewBox: "0 0 24 24",
-    fill: "currentColor"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"
-  })), "GitHub")), /*#__PURE__*/React.createElement("div", {
-    className: "divider"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "divider-line"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "divider-text"
-  }, "or continue with email"), /*#__PURE__*/React.createElement("div", {
-    className: "divider-line"
-  }))), error && /*#__PURE__*/React.createElement("div", {
-    className: "login-error"
-  }, "\u26A0 ", error), success && /*#__PURE__*/React.createElement("div", {
-    className: "login-success"
-  }, "\u2713 ", success), /*#__PURE__*/React.createElement("form", {
-    onSubmit: handleSubmit,
+    className: "lp-tab" + (tab === "signin" ? " active" : ""),
+    onClick: () => setTab("signin")
+  }, "Sign In"), /*#__PURE__*/React.createElement("button", {
+    className: "lp-tab" + (tab === "signup" ? " active" : ""),
+    onClick: () => setTab("signup")
+  }, "Sign Up")), error && /*#__PURE__*/React.createElement("div", {
+    className: "lp-error"
+  }, "⚠ " + error), success && /*#__PURE__*/React.createElement("div", {
+    className: "lp-success"
+  }, "✓ " + success), /*#__PURE__*/React.createElement("form", {
     key: formKey,
-    className: "form-animate",
+    onSubmit: handleSubmit,
+    className: "lp-form-in",
     noValidate: true
-  }, mode === "signup" && /*#__PURE__*/React.createElement("div", {
-    className: "login-field"
+  }, tab === "signup" && /*#__PURE__*/React.createElement("div", {
+    className: "lp-field"
   }, /*#__PURE__*/React.createElement("label", {
-    className: "login-label"
+    className: "lp-label"
   }, "Full Name"), /*#__PURE__*/React.createElement("input", {
-    className: "login-input",
+    className: "lp-input",
     type: "text",
     placeholder: "Your full name",
     value: name,
@@ -558,11 +190,11 @@ function Login({
     disabled: loading,
     autoComplete: "name"
   })), /*#__PURE__*/React.createElement("div", {
-    className: "login-field"
+    className: "lp-field"
   }, /*#__PURE__*/React.createElement("label", {
-    className: "login-label"
+    className: "lp-label"
   }, "Email Address"), /*#__PURE__*/React.createElement("input", {
-    className: "login-input",
+    className: "lp-input",
     type: "email",
     ref: emailRef,
     placeholder: "you@company.com",
@@ -570,63 +202,67 @@ function Login({
     onChange: e => setEmail(e.target.value),
     disabled: loading,
     autoComplete: "email"
-  })), mode !== "forgot" && /*#__PURE__*/React.createElement("div", {
-    className: "login-field"
+  })), tab !== "forgot" && /*#__PURE__*/React.createElement("div", {
+    className: "lp-field"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "login-field-row"
+    className: "lp-row"
   }, /*#__PURE__*/React.createElement("label", {
-    className: "login-label",
+    className: "lp-label",
     style: {
       marginBottom: 0
     }
-  }, "Password"), mode === "login" && /*#__PURE__*/React.createElement("button", {
+  }, "Password"), tab === "signin" && /*#__PURE__*/React.createElement("button", {
     type: "button",
-    className: "forgot-link",
-    onClick: () => setMode("forgot")
-  }, "Forgot password?")), /*#__PURE__*/React.createElement("div", {
-    className: "login-input-wrap",
-    style: {
-      marginTop: 7
-    }
+    className: "lp-forgot",
+    onClick: () => setTab("forgot")
+  }, "Forgot?")), /*#__PURE__*/React.createElement("div", {
+    className: "lp-input-wrap"
   }, /*#__PURE__*/React.createElement("input", {
-    className: "login-input",
+    className: "lp-input lp-input-pw",
     type: showPw ? "text" : "password",
-    placeholder: mode === "signup" ? "Min 8 chars, mixed case + numbers" : "Enter your password",
+    placeholder: tab === "signup" ? "Min 8 chars, mixed + numbers" : "Your password",
     value: password,
     onChange: e => setPassword(e.target.value),
-    style: {
-      paddingRight: 42
-    },
     disabled: loading,
-    autoComplete: mode === "signup" ? "new-password" : "current-password"
-  }), /*#__PURE__*/React.createElement("span", {
-    className: "login-input-icon",
+    autoComplete: tab === "signup" ? "new-password" : "current-password"
+  }), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "lp-eye",
     onClick: () => setShowPw(p => !p)
-  }, showPw ? "🙈" : "👁")), mode === "signup" && password && /*#__PURE__*/React.createElement("div", {
-    className: "pw-strength"
+  }, showPw ? "🙈" : "👁")), tab === "signup" && password && /*#__PURE__*/React.createElement("div", {
+    className: "pw-bars"
   }, [1, 2, 3, 4].map(i => /*#__PURE__*/React.createElement("div", {
     key: i,
-    className: `pw-bar${strength >= i ? " " + sCls : ""}`
+    className: "pw-bar" + (strength >= i ? " " + pwCls : "")
   })), /*#__PURE__*/React.createElement("span", {
-    className: "pw-label",
+    className: "pw-lbl",
     style: {
-      color: sColor
+      color: pwCol
     }
-  }, sLabel))), /*#__PURE__*/React.createElement("button", {
+  }, pwLbl))), /*#__PURE__*/React.createElement("button", {
     type: "submit",
-    className: `login-submit${loading ? " loading" : ""}`,
+    className: "lp-btn" + (loading ? " loading" : ""),
     disabled: loading
-  }, loading ? mode === "forgot" ? "Sending…" : mode === "signup" ? "Creating Account…" : "Signing In…" : mode === "forgot" ? "Send Reset Link →" : mode === "signup" ? "Create Account →" : "Sign In →")), /*#__PURE__*/React.createElement("div", {
-    className: "login-switch"
-  }, mode === "login" && /*#__PURE__*/React.createElement(React.Fragment, null, "Don't have an account?", /*#__PURE__*/React.createElement("button", {
-    onClick: () => setMode("signup")
-  }, "Sign up free")), mode === "signup" && /*#__PURE__*/React.createElement(React.Fragment, null, "Already have an account?", /*#__PURE__*/React.createElement("button", {
-    onClick: () => setMode("login")
-  }, "Sign in")), mode === "forgot" && /*#__PURE__*/React.createElement(React.Fragment, null, "Remember your password?", /*#__PURE__*/React.createElement("button", {
-    onClick: () => setMode("login")
-  }, "Back to sign in"))), mode === "signup" && /*#__PURE__*/React.createElement("div", {
-    className: "login-terms"
-  }, "By creating an account you agree to our", /*#__PURE__*/React.createElement("br", null), "Terms of Service and Privacy Policy.", /*#__PURE__*/React.createElement("br", null), "Secured by Paystack \xB7 256-bit SSL encryption."))));
+  }, loading ? tab === "forgot" ? "Sending…" : tab === "signup" ? "Creating…" : "Signing in…" : tab === "forgot" ? "Send Reset Link →" : tab === "signup" ? "Create Account →" : "Sign In →")), tab === "forgot" && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      marginTop: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    style: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      fontFamily: "'Space Mono',monospace",
+      fontSize: 9,
+      color: "rgba(255,255,255,0.4)",
+      letterSpacing: "1px",
+      textDecoration: "underline"
+    },
+    onClick: () => setTab("signin")
+  }, "\u2190 Back to sign in")), /*#__PURE__*/React.createElement("div", {
+    className: "lp-footer"
+  }, "\xA9 ", new Date().getFullYear(), " Amparo Engineering Limited", /*#__PURE__*/React.createElement("br", null), "256-bit SSL \xB7 Secured by Paystack"))));
 }
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
